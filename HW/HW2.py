@@ -1,6 +1,6 @@
 import streamlit as st
 from openai import OpenAI
-import anthropic
+from anthropic import Anthropic
 import requests
 from bs4 import BeautifulSoup
 
@@ -77,7 +77,7 @@ except KeyError as e:
 if llm_provider == "OpenAI":
     client = OpenAI(api_key=openai_api_key)
 else:
-    client = anthropic.Anthropic(api_key=anthropic_api_key)
+    client = Anthropic(api_key=anthropic_api_key)
 
 if url_input:
     if st.button("Generate Summary"):
