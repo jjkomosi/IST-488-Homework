@@ -53,7 +53,7 @@ else:  # Anthropic
     if use_advanced_model:
         model_name = "claude-sonnet-4-5-20250929"
     else:
-        model_name = "claude-haiku-4-5-20251015"
+        model_name = "claude-haiku-4-5-20251001"
     st.sidebar.info(f"Using: {model_name}")
 
 # Main page
