@@ -1,5 +1,5 @@
 streamlit
 openai
 PyMuPDF
-Anthropic
+anthropic
 requests
