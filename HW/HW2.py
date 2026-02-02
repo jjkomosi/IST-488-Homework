@@ -45,9 +45,9 @@ use_advanced_model = st.sidebar.checkbox('Use advanced model')
 # Set model names based on selections
 if llm_provider == "OpenAI":
     if use_advanced_model:
-        model_name = "gpt-5-latest"
+        model_name = "gpt-5"
     else:
-        model_name = "gpt-4o-nano"
+        model_name = "gpt-5-nano"
     st.sidebar.info(f"Using: {model_name}")
 else:  # Anthropic
     if use_advanced_model:
