@@ -1,6 +1,7 @@
 streamlit
 openai
 PyMuPDF
+tiktoken
 anthropic
 requests
 beautifulsoup4
