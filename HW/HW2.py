@@ -36,11 +36,13 @@ output_language = st.sidebar.selectbox(
 st.sidebar.header(':green[LLM Selection]')
 llm_provider = st.sidebar.selectbox(
     'Choose LLM provider',
-    ('OpenAI', 'Anthropic (Claude)')
+    ('OpenAI (ChatGPT)', 'Anthropic (Claude)')
 )
 
 # Advanced model checkbox
 use_advanced_model = st.sidebar.checkbox('Use advanced model')
+
+
 
 # Set model names based on selections
 if llm_provider == "OpenAI":
