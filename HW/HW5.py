@@ -19,8 +19,20 @@ import os
 # We use a new collection name to force a rebuild with our improved parser.
 # The HW4 collection only had JSON data; this one also scrapes the HTML body
 # for contact info, meeting details, officers, and descriptions.
+#
+# IMPORTANT: If you change the parser or chunking logic, increment DB_VERSION
+# to force a rebuild on the next deploy.
+DB_VERSION = "v2"
+DB_COLLECTION_NAME = f"HW5Collection_{DB_VERSION}"
+
 chroma_client = chromadb.PersistentClient(path='./ChromaDB_for_HW5')
-collection = chroma_client.get_or_create_collection('HW5Collection')
+
+# Delete any old collections so we don't accumulate stale data
+for existing in chroma_client.list_collections():
+    if existing.name != DB_COLLECTION_NAME:
+        chroma_client.delete_collection(existing.name)
+
+collection = chroma_client.get_or_create_collection(DB_COLLECTION_NAME)
 
 # ─── Initialize API Clients ──────────────────────────────────────────────────
 if 'anthropic_client' not in st.session_state:
@@ -455,6 +467,18 @@ and suggest the user try rephrasing their question."""
 # ─── Streamlit UI ─────────────────────────────────────────────────────────────
 st.title("HW5: Syracuse Student Organization Chatbot")
 st.caption("Ask me anything about student organizations at Syracuse University!")
+
+# Sidebar with DB info for debugging
+with st.sidebar:
+    st.markdown(f"**DB Version:** {DB_VERSION}")
+    st.markdown(f"**Documents in DB:** {collection.count()}")
+    if st.button("🔄 Rebuild Database"):
+        # Delete and recreate
+        chroma_client.delete_collection(DB_COLLECTION_NAME)
+        collection = chroma_client.get_or_create_collection(DB_COLLECTION_NAME)
+        load_html_to_collection('./HW4_Data/', collection)
+        st.success(f"Rebuilt! {collection.count()} chunks loaded.")
+        st.rerun()
 
 # Initialize chat history
 if 'messages' not in st.session_state:
