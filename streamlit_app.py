@@ -12,7 +12,7 @@ hw7_page = st.Page("HW/HW7.py", title="HW 7", icon="🧙‍♂️", default=True
 
 
 # Create navigation
-nav = st.navigation([hw1_page, hw2_page, hw3_page, hw4_page, hw5_page])
+nav = st.navigation([hw1_page, hw2_page, hw3_page, hw4_page, hw5_page, hw7_page])
 
 # Run the selected page
 nav.run()
