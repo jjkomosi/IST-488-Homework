@@ -1,4 +1,5 @@
 .streamlit/secrets.toml
+HW7_data/news_chroma_db/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
