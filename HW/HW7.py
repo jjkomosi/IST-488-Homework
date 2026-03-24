@@ -15,7 +15,6 @@ import anthropic
 st.set_page_config(page_title="News Intelligence Bot", page_icon="📰", layout="wide")
 
 # ── Constants ────────────────────────────────────────────────────────
-DB_DIR = "../HW7_data/news_chroma_db"
 COLLECTION_NAME = "news_articles"
 
 MODELS = {
@@ -97,16 +96,48 @@ TOOLS = [
 # ── Load ChromaDB ────────────────────────────────────────────────────
 @st.cache_resource
 def load_collection():
-    """Load the pre-built ChromaDB collection."""
+    """Load the ChromaDB collection, building it from CSV if needed."""
+    import csv
+
+    DB_DIR = "HW7_data/news_chroma_db"
+    CSV_PATH = "HW7_data/news.csv"
+
     embedding_fn = OpenAIEmbeddingFunction(
         api_key=st.secrets["OPENAI_API_KEY"],
         model_name="text-embedding-3-small",
     )
+
     client = chromadb.PersistentClient(path=DB_DIR)
     collection = client.get_or_create_collection(
         name=COLLECTION_NAME,
         embedding_function=embedding_fn,
     )
+
+    # If empty, build from CSV
+    if collection.count() == 0:
+        seen_urls = set()
+        articles = []
+        with open(CSV_PATH, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                url = row["URL"].strip()
+                if url not in seen_urls:
+                    seen_urls.add(url)
+                    articles.append(row)
+
+        BATCH_SIZE = 200
+        for i in range(0, len(articles), BATCH_SIZE):
+            batch = articles[i : i + BATCH_SIZE]
+            collection.add(
+                ids=[f"article_{i + j}" for j in range(len(batch))],
+                documents=[row["Document"] for row in batch],
+                metadatas=[{
+                    "company": row["company_name"].strip(),
+                    "date": row["Date"],
+                    "url": row["URL"].strip(),
+                } for row in batch],
+            )
+
     return collection
 
 
