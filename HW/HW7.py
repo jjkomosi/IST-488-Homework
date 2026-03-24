@@ -103,11 +103,6 @@ def load_collection():
     DB_DIR = "HW7_data/news_chroma_db"
     CSV_PATH = "HW7_data/news.csv"
 
-    # Debug: show what Streamlit Cloud sees
-    st.sidebar.write("CWD:", os.getcwd())
-    st.sidebar.write("CSV exists:", os.path.exists(CSV_PATH))
-    st.sidebar.write("HW7_data contents:", os.listdir("HW7_data") if os.path.exists("HW7_data") else "FOLDER NOT FOUND")
-
     embedding_fn = OpenAIEmbeddingFunction(
         api_key=st.secrets["OPENAI_API_KEY"],
         model_name="text-embedding-3-small",
