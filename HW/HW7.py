@@ -98,9 +98,15 @@ TOOLS = [
 def load_collection():
     """Load the ChromaDB collection, building it from CSV if needed."""
     import csv
+    import os
 
     DB_DIR = "HW7_data/news_chroma_db"
     CSV_PATH = "HW7_data/news.csv"
+
+    # Debug: show what Streamlit Cloud sees
+    st.sidebar.write("CWD:", os.getcwd())
+    st.sidebar.write("CSV exists:", os.path.exists(CSV_PATH))
+    st.sidebar.write("HW7_data contents:", os.listdir("HW7_data") if os.path.exists("HW7_data") else "FOLDER NOT FOUND")
 
     embedding_fn = OpenAIEmbeddingFunction(
         api_key=st.secrets["OPENAI_API_KEY"],
@@ -113,7 +119,6 @@ def load_collection():
         embedding_function=embedding_fn,
     )
 
-    # If empty, build from CSV
     if collection.count() == 0:
         seen_urls = set()
         articles = []
@@ -124,6 +129,8 @@ def load_collection():
                 if url not in seen_urls:
                     seen_urls.add(url)
                     articles.append(row)
+
+        st.sidebar.write(f"Building DB with {len(articles)} articles...")
 
         BATCH_SIZE = 200
         for i in range(0, len(articles), BATCH_SIZE):
