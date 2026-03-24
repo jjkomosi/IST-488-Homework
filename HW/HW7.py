@@ -15,7 +15,7 @@ import anthropic
 st.set_page_config(page_title="News Intelligence Bot", page_icon="📰", layout="wide")
 
 # ── Constants ────────────────────────────────────────────────────────
-DB_DIR = "HW7_data/news_chroma_db"
+DB_DIR = "../HW7_data/news_chroma_db"
 COLLECTION_NAME = "news_articles"
 
 MODELS = {
